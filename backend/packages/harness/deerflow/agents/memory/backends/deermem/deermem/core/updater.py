@@ -30,7 +30,9 @@ from .prompt import (
     load_prompt_messages,
 )
 from .storage import (
+    MemoryFactRevisionConflict,
     MemoryManifestRevisionConflict,
+    MemoryRevisionConflict,
     MemoryStorage,
     create_empty_memory,
     normalize_memory_data,
@@ -1599,13 +1601,16 @@ class MemoryUpdater:
             # inside _apply_updates at the real confidence-filter site, so the
             # metric tracks the actual filter rather than a re-derived copy here.
         if getattr(type(self._storage), "apply_changes", None) is not MemoryStorage.apply_changes:
+            source_memory = current_memory
+            source_by_id = {str(fact.get("id")): fact for fact in source_memory.get("facts", [])}
+            fact_preconditions: dict[str, int | None] = {}
+            summary_preconditions: dict[tuple[str, str], Any] = {}
             for attempt in range(3):
                 capacity_decisions: list[tuple[FactEvictionDecision, FactEvictionDecision | None]] = []
                 # Deep-copy before in-place mutation so a failed commit cannot
                 # corrupt the cached snapshot. On a manifest conflict the
-                # complete extraction result is reapplied to a fresh document;
-                # its trim/consolidation/delete decisions are snapshot-wide and
-                # must never be replayed as disjoint point writes.
+                # decisions are recomputed against a fresh document, while the
+                # model's original source preconditions remain authoritative.
                 updated_memory = self._apply_updates(
                     copy.deepcopy(current_memory),
                     update_data,
@@ -1630,6 +1635,25 @@ class MemoryUpdater:
                         "user": copy.deepcopy(updated_memory.get("user", {})),
                         "history": copy.deepcopy(updated_memory.get("history", {})),
                     }
+                # Retain every affected source across retries, even if a peer
+                # deleted it or made the proposed mutation a no-op. New targets
+                # selected during recomputation must also match the model input.
+                for fact_id in current_by_id:
+                    if current_by_id[fact_id] != updated_by_id.get(fact_id):
+                        source_fact = source_by_id.get(fact_id)
+                        fact_preconditions[fact_id] = int(source_fact.get("revision") or 1) if source_fact is not None else None
+                for fact_id, expected_revision in fact_preconditions.items():
+                    current_fact = current_by_id.get(fact_id)
+                    actual_revision = int(current_fact.get("revision") or 1) if current_fact is not None else None
+                    if actual_revision != expected_revision:
+                        raise MemoryFactRevisionConflict(f"Extraction source fact {fact_id!r} changed during model invocation")
+                for group in ("user", "history"):
+                    for section, value in updated_memory.get(group, {}).items():
+                        if value != current_memory.get(group, {}).get(section):
+                            summary_preconditions[(group, section)] = source_memory.get(group, {}).get(section, {}).get("summary")
+                for (group, section), expected_summary in summary_preconditions.items():
+                    if current_memory.get(group, {}).get(section, {}).get("summary") != expected_summary:
+                        raise MemoryRevisionConflict(f"Extraction source summary {group}.{section} changed during model invocation")
                 try:
                     self._storage.apply_changes(
                         change_set,

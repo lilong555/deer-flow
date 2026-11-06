@@ -3535,6 +3535,12 @@ backend close plus a safety margin. The flush timeout does not bound `close()`:
 custom backends must make close quick or internally bounded, or shutdown can wait
 until the process is forcibly terminated.
 
+DeerMem preserves concurrent edits while a memory-extraction model call is
+running. If an affected summary field or fact changes, the old extraction
+returns a retryable failure and keeps its conversation watermark unchanged.
+The next normal conversation update can extract that feed from the current
+memory. Unrelated fields, facts, and user scopes can still merge.
+
 Most agents forget everything the moment a conversation ends. DeerFlow remembers.
 
 DeerMem can optionally suppress near-duplicate extracted facts with
