@@ -289,15 +289,7 @@ The Gateway closes the derived SQLite connection after that flush.
 
 #### Extraction safety
 
-`_finalize_update` retains the model input's summary values and affected fact
-revisions across manifest retries. Recompute changes against the fresh snapshot,
-then validate every affected source, including targets removed or made unchanged
-by a peer. A source conflict fails the entire extraction before publication;
-its normal conversation watermark stays retryable. Disjoint writes can merge
-within the existing three-attempt budget. Summary preconditions compare each
-affected field's prose; fact preconditions compare its original revision.
-`tests/test_memory_extraction_preconditions.py` covers real storage, sync/async
-entry points, Gateway management writes, restart retries and persistence failures.
+Extraction retains source preconditions.
 
 Extraction labels proposals with `scope`, `durability`, and `authority`.
 Automatic writes accept only user-scoped, durable, descriptive facts.

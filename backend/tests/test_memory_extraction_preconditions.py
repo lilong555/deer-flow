@@ -260,6 +260,39 @@ def test_fact_revision_detects_edit_and_restore(tmp_path):
     assert fresh(tmp_path)["facts"][0]["content"] == content
 
 
+@pytest.mark.parametrize("asynchronous", [False, True], ids=["sync", "async"])
+@pytest.mark.parametrize("changed_field", ["content", "category", "createdAt"])
+def test_delete_and_import_same_revision_preserves_recreated_fact(tmp_path, asynchronous, changed_field):
+    _, peer = runtime(tmp_path)
+    _, fact_id = peer.create_memory_fact("The user prefers weekly reports.", confidence=0.9, **SCOPE)
+    backup = copy.deepcopy(peer.get_memory_data(**SCOPE))
+    original = copy.deepcopy(backup["facts"][0])
+    replacement = {
+        "content": "The user prefers daily reports.",
+        "category": "correction",
+        "createdAt": "2000-01-01T00:00:00Z",
+    }
+    imported = []
+
+    def delete_and_import():
+        peer.delete_memory_fact(fact_id, **SCOPE)
+        backup["facts"][0][changed_field] = replacement[changed_field]
+        peer.import_memory_data(backup, replace_shared_summaries=False, **SCOPE)
+        imported.append(copy.deepcopy(peer.get_memory_data(**SCOPE)["facts"][0]))
+
+    model = Model({"factsToRemove": [{"id": fact_id, "scope": "user", "reason": "User withdrew the old preference."}]}, delete_and_import)
+    storage, updater = runtime(tmp_path, model)
+    success = extract(updater, asynchronous=asynchronous)
+    assert len(imported) == 1
+    assert imported[0]["id"] == original["id"]
+    assert imported[0]["revision"] == original["revision"] == 1
+    assert imported[0][changed_field] == replacement[changed_field]
+    assert success is False
+    assert fresh(tmp_path)["facts"] == imported
+    assert storage.get_extraction_watermark(THREAD, **SCOPE) is None
+    assert_retryable(tmp_path, updater, model, asynchronous=asynchronous)
+
+
 @pytest.mark.parametrize("kind", ["summary", "removal"])
 def test_rejected_proposal_does_not_block_unrelated_updates(tmp_path, kind):
     write_summary(tmp_path, text=OLD)

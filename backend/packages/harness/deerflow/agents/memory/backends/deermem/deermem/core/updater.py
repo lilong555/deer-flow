@@ -1603,7 +1603,7 @@ class MemoryUpdater:
         if getattr(type(self._storage), "apply_changes", None) is not MemoryStorage.apply_changes:
             source_memory = current_memory
             source_by_id = {str(fact.get("id")): fact for fact in source_memory.get("facts", [])}
-            fact_preconditions: dict[str, int | None] = {}
+            fact_preconditions: dict[str, dict[str, Any] | None] = {}
             summary_preconditions: dict[tuple[str, str], Any] = {}
             for attempt in range(3):
                 capacity_decisions: list[tuple[FactEvictionDecision, FactEvictionDecision | None]] = []
@@ -1640,12 +1640,11 @@ class MemoryUpdater:
                 # selected during recomputation must also match the model input.
                 for fact_id in current_by_id:
                     if current_by_id[fact_id] != updated_by_id.get(fact_id):
-                        source_fact = source_by_id.get(fact_id)
-                        fact_preconditions[fact_id] = int(source_fact.get("revision") or 1) if source_fact is not None else None
-                for fact_id, expected_revision in fact_preconditions.items():
-                    current_fact = current_by_id.get(fact_id)
-                    actual_revision = int(current_fact.get("revision") or 1) if current_fact is not None else None
-                    if actual_revision != expected_revision:
+                        fact_preconditions[fact_id] = source_by_id.get(fact_id)
+                # Delete/reimport can reuse an ID and revision, so compare the
+                # complete canonical source, including content and metadata.
+                for fact_id, source_fact in fact_preconditions.items():
+                    if current_by_id.get(fact_id) != source_fact:
                         raise MemoryFactRevisionConflict(f"Extraction source fact {fact_id!r} changed during model invocation")
                 for group in ("user", "history"):
                     for section, value in updated_memory.get(group, {}).items():
