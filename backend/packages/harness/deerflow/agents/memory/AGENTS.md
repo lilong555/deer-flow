@@ -184,10 +184,10 @@ Whole-document `load` and `save` remain compatibility operations.
 It never labels a partial cache as a complete memory document.
 Public callers reload only when their response contract requires a complete document.
 
-Writes use a user lock, shared revision, fact revisions, and a recovery journal.
-Point operations can rebase only when all original fact preconditions still hold.
-Snapshot operations must reload and recompute after a manifest conflict.
-Use the typed conflict classes instead of matching exception text.
+Writes use user locks, shared/fact revisions and a recovery journal.
+Point rebases require original fact preconditions. On manifest conflicts,
+reload and recompute snapshots. Extraction retains source preconditions.
+Use typed conflict classes.
 
 Replacement imports copy facts, validate supplied revisions as positive integers,
 and use live revisions for existing IDs. Omitted revisions stay valid. Preserve
@@ -288,8 +288,6 @@ It reserves the full configured timeout for canonical memory flush.
 The Gateway closes the derived SQLite connection after that flush.
 
 #### Extraction safety
-
-Extraction retains source preconditions.
 
 Extraction labels proposals with `scope`, `durability`, and `authority`.
 Automatic writes accept only user-scoped, durable, descriptive facts.
