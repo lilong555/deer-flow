@@ -1,0 +1,290 @@
+{
+  "head": "a3f6d8d84e67585bfd3435fe03f7723be053b94a",
+  "manager_source": "backend/packages/harness/deerflow/runtime/runs/manager.py",
+  "manager_sha256": "bbf2dbf17b2610b4561f12c02ee1db1f7e3c86edd6f89f80dff8286ad59b888e",
+  "probe_sha256": "e93e08050d2b79f37a64a5348b5253f058713cb81a61dbb341471c8053882e1c",
+  "fixture": {
+    "version": "postgres (PostgreSQL) 18.1",
+    "host": "127.0.0.1",
+    "port": 55441,
+    "user": "deerflow_test",
+    "url": "postgresql://deerflow_test@127.0.0.1:55441/postgres?sslmode=disable"
+  },
+  "results": [
+    {
+      "case": "recover/checkpoint_write/reject",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/checkpoint_write/interrupt",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/checkpoint_write/rollback",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/artifact_write/reject",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/artifact_write/interrupt",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/artifact_write/rollback",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/artifact_archive/reject",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/artifact_archive/interrupt",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/artifact_archive/rollback",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/branch/reject",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/branch/interrupt",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/branch/rollback",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/delete/reject",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/delete/interrupt",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "recover/delete/rollback",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "active/reject",
+      "passed": true,
+      "observation": {
+        "local_and_peer_rejected": true
+      }
+    },
+    {
+      "case": "new-key/reject",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "23505"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "durable-replay/reject",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03"
+        ],
+        "durable_result_replayed": true
+      }
+    },
+    {
+      "case": "active/interrupt",
+      "passed": true,
+      "observation": {
+        "local_and_peer_rejected": true
+      }
+    },
+    {
+      "case": "new-key/interrupt",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "durable-replay/interrupt",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03"
+        ],
+        "durable_result_replayed": true
+      }
+    },
+    {
+      "case": "active/rollback",
+      "passed": true,
+      "observation": {
+        "local_and_peer_rejected": true
+      }
+    },
+    {
+      "case": "new-key/rollback",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "durable-replay/rollback",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03"
+        ],
+        "durable_result_replayed": true
+      }
+    },
+    {
+      "case": "body-error",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03",
+          "55P03"
+        ],
+        "successor_admitted": true
+      }
+    },
+    {
+      "case": "peer-after-external-release",
+      "passed": true,
+      "observation": {
+        "peer_row_preserved": true
+      }
+    },
+    {
+      "case": "cancelled-sql-delete",
+      "passed": true,
+      "observation": {
+        "database_lock_wait_observed": true,
+        "cancelled_delete_recovered": true
+      }
+    }
+  ],
+  "passed": 27,
+  "failed": 0
+}

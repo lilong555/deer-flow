@@ -1,0 +1,7 @@
+{
+  "version": "postgres (PostgreSQL) 18.1",
+  "host": "127.0.0.1",
+  "port": 55441,
+  "user": "deerflow_test",
+  "url": "postgresql://deerflow_test@127.0.0.1:55441/postgres?sslmode=disable"
+}

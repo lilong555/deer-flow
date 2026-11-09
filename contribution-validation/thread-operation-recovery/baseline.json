@@ -1,0 +1,195 @@
+{
+  "head": "4e09e63a68f55bf5203838598b399fd03b2e80bd",
+  "manager_source": "backend/packages/harness/deerflow/runtime/runs/manager.py",
+  "manager_sha256": "f1b5876a29725b0fd61d01c30ffebe1c58c36d8e967ca2f4f00da38b76bedc6c",
+  "probe_sha256": "e93e08050d2b79f37a64a5348b5253f058713cb81a61dbb341471c8053882e1c",
+  "fixture": {
+    "version": "postgres (PostgreSQL) 18.1",
+    "host": "127.0.0.1",
+    "port": 55441,
+    "user": "deerflow_test",
+    "url": "postgresql://deerflow_test@127.0.0.1:55441/postgres?sslmode=disable"
+  },
+  "results": [
+    {
+      "case": "recover/checkpoint_write/reject",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread already has an active run"
+    },
+    {
+      "case": "recover/checkpoint_write/interrupt",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/checkpoint_write/rollback",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/artifact_write/reject",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread already has an active run"
+    },
+    {
+      "case": "recover/artifact_write/interrupt",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/artifact_write/rollback",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/artifact_archive/reject",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread already has an active run"
+    },
+    {
+      "case": "recover/artifact_archive/interrupt",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/artifact_archive/rollback",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/branch/reject",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread already has an active run"
+    },
+    {
+      "case": "recover/branch/interrupt",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/branch/rollback",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/delete/reject",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread already has an active run"
+    },
+    {
+      "case": "recover/delete/interrupt",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "recover/delete/rollback",
+      "passed": false,
+      "error_type": "DBAPIError",
+      "error": "(sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNotAvailableError'>: canceling statement due to lock timeout\n[SQL: SELECT runs.run_id, runs.thread_id, runs.assistant_id, runs.user_id, runs.status, runs.operation_kind, runs.idempotency_key, runs.idempotency_request_json, runs.model_name, runs.multitask_strategy, runs.metadata_json, runs.kwargs_json, runs.run_inputs_json, runs.error, runs.stop_reason, runs.goal_verdict, runs.message_count, runs.first_human_message, runs.last_ai_message, runs.total_input_tokens, runs.total_output_tokens, runs.total_tokens, runs.llm_call_count, runs.lead_agent_tokens, runs.subagent_tokens, runs.middleware_tokens, runs.token_usage_by_model, runs.follow_up_to_run_id, runs.owner_worker_id, runs.lease_expires_at, runs.run_incarnation, runs.producer_epoch, runs.producer_state, runs.cancel_action, runs.cancel_requested_at, runs.created_at, runs.updated_at, runs.change_seq, runs.evidence_origin, runs.evidence_agent_id, runs.evidence_seal_state, runs.evidence_seal_error, runs.evidence_revision, runs.evidence_upper_seq, runs.evidence_event_count, runs.evidence_retention_revision, runs.origin_kind \nFROM runs \nWHERE runs.thread_id = $1::VARCHAR AND runs.status IN ($2::VARCHAR, $3::VARCHAR) FOR UPDATE]\n[parameters: ('thread', 'pending', 'running')]\n(Background on this error at: https://sqlalche.me/e/20/dbapi)"
+    },
+    {
+      "case": "active/reject",
+      "passed": true,
+      "observation": {
+        "local_and_peer_rejected": true
+      }
+    },
+    {
+      "case": "new-key/reject",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread already has an active run"
+    },
+    {
+      "case": "durable-replay/reject",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03"
+        ],
+        "durable_result_replayed": true
+      }
+    },
+    {
+      "case": "active/interrupt",
+      "passed": true,
+      "observation": {
+        "local_and_peer_rejected": true
+      }
+    },
+    {
+      "case": "new-key/interrupt",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread has an active checkpoint write"
+    },
+    {
+      "case": "durable-replay/interrupt",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03"
+        ],
+        "durable_result_replayed": true
+      }
+    },
+    {
+      "case": "active/rollback",
+      "passed": true,
+      "observation": {
+        "local_and_peer_rejected": true
+      }
+    },
+    {
+      "case": "new-key/rollback",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread has an active checkpoint write"
+    },
+    {
+      "case": "durable-replay/rollback",
+      "passed": true,
+      "observation": {
+        "sqlstates": [
+          "55P03"
+        ],
+        "durable_result_replayed": true
+      }
+    },
+    {
+      "case": "body-error",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread already has an active run"
+    },
+    {
+      "case": "peer-after-external-release",
+      "passed": true,
+      "observation": {
+        "peer_row_preserved": true
+      }
+    },
+    {
+      "case": "cancelled-sql-delete",
+      "passed": false,
+      "error_type": "ConflictError",
+      "error": "Thread thread already has an active run"
+    }
+  ],
+  "passed": 7,
+  "failed": 20
+}
