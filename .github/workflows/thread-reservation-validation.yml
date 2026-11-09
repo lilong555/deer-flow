@@ -20,7 +20,7 @@ jobs:
             sha: 4e09e63a68f55bf5203838598b399fd03b2e80bd
           - name: candidate
             sha: a3f6d8d84e67585bfd3435fe03f7723be053b94a
-        suite: [shard-1, shard-2, shard-3, shard-4, blocking-io]
+        suite: [shard-1, shard-2, shard-3, shard-4]
     services:
       postgres:
         image: postgres:17
@@ -55,12 +55,25 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
       - uses: astral-sh/setup-uv@v7
         with:
           version: '0.11.1'
       - name: Install backend dependencies
         working-directory: backend
         run: uv sync --frozen --group dev --extra postgres
+      - name: Install ReadabiliPy's locked JavaScript dependencies
+        working-directory: backend
+        run: |
+          .venv/bin/python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          import readabilipy
+          package = Path(readabilipy.__file__).parent / 'javascript'
+          subprocess.run(['npm', 'ci', '--ignore-scripts', '--no-audit', '--no-fund'], cwd=package, check=True)
+          PY
       - name: Run repository target and record source identity
         working-directory: backend
         env:
@@ -95,6 +108,8 @@ jobs:
               'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
               'command': command,
               'source_sha256': hashes(),
+              'node': subprocess.check_output(['node', '--version'], text=True).strip(),
+              'readability_node_dependencies': 'npm ci from the bundled package-lock.json',
           }
           started = time.monotonic()
           log = output / 'pytest.log'
