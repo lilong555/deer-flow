@@ -1,0 +1,126 @@
+name: DeerFlow PR maintenance validation
+
+on:
+  push:
+    branches: [validation/deerflow-maintenance-20261110]
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: ${{ matrix.revision.name }} / ${{ matrix.suite }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        revision:
+          - name: baseline
+            sha: 99e395aa9cdc369e8c80b164be4baa543619d8a8
+          - name: pr-7891
+            sha: 928979c7c6cc71735cb5c9d65871f64ce81c999e
+          - name: pr-7957
+            sha: a151f4af834a6175eecf264ad03b75fb64491715
+        suite: [shard-1, shard-2, shard-3, shard-4, blocking-io]
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: deerflow
+          POSTGRES_PASSWORD: deerflow
+          POSTGRES_DB: deerflow_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      TEST_POSTGRES_URI: postgresql://deerflow:deerflow@localhost:5432/deerflow_test?sslmode=disable
+      DEERFLOW_TEST_WORKFLOW_POSTGRES: postgresql://deerflow:deerflow@localhost:5432/deerflow_test?sslmode=disable
+      DEDUPE_TEST_POSTGRES_URL: postgresql://deerflow:deerflow@localhost:5432/deerflow_test?sslmode=disable
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ matrix.revision.sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.11.1'
+      - name: Install backend dependencies
+        working-directory: backend
+        run: uv sync --frozen --group dev --extra postgres
+      - name: Run repository target and record source identity
+        working-directory: backend
+        env:
+          VALIDATION_SUITE: ${{ matrix.suite }}
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timezone
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import time
+
+          output = Path(os.environ['RUNNER_TEMP']) / 'pr-maintenance-validation'
+          output.mkdir()
+          repo = Path.cwd().parent
+          files = [
+              'README.md',
+              'CHANGELOG.md',
+              'backend/packages/harness/deerflow/agents/AGENTS.md',
+              'backend/packages/harness/deerflow/agents/memory/AGENTS.md',
+              'backend/packages/harness/deerflow/persistence/AGENTS.md',
+              'backend/packages/harness/deerflow/persistence/subagent_batches/sql.py',
+              'backend/packages/harness/deerflow/agents/memory/backends/deermem/deermem/core/storage.py',
+              'backend/tests/test_batch_retry_admission.py',
+              'backend/tests/test_memory_storage_markdown.py',
+          ]
+          def hashes():
+              return {name: hashlib.sha256((repo / name).read_bytes()).hexdigest()
+                      for name in files if (repo / name).is_file()}
+          suite = os.environ['VALIDATION_SUITE']
+          command = ['make', 'test-blocking-io'] if suite == 'blocking-io' else [
+              'make', 'test-shard', 'SPLITS=4', 'GROUP=' + suite.rsplit('-', 1)[1]]
+          record = {
+              'recorded_at': datetime.now(timezone.utc).isoformat(),
+              'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'command': command,
+              'source_sha256': hashes(),
+          }
+          started = time.monotonic()
+          log = output / 'pytest.log'
+          with log.open('wb') as stream:
+              result = subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT)
+          record.update(exit_code=result.returncode,
+                        elapsed_seconds=round(time.monotonic() - started, 3),
+                        source_unchanged=record['source_sha256'] == hashes(),
+                        log_sha256=hashlib.sha256(log.read_bytes()).hexdigest())
+          (output / 'result.json').write_text(json.dumps(record, indent=2) + '\n')
+          print('\n'.join(log.read_text(errors='replace').splitlines()[-100:]))
+          print(json.dumps(record))
+          raise SystemExit(result.returncode or (0 if record['source_unchanged'] else 1))
+          PY
+      - name: Retain complete test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maintenance-${{ matrix.revision.name }}-${{ matrix.suite }}
+          path: ${{ runner.temp }}/pr-maintenance-validation/
+          if-no-files-found: warn
+          retention-days: 30
