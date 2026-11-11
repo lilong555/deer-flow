@@ -1,6 +1,7 @@
 name: DeerFlow PR maintenance validation
 
 on:
+  workflow_dispatch:
   push:
     branches: [validation/deerflow-maintenance-20261111]
 
