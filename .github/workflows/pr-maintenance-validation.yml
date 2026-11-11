@@ -2,7 +2,7 @@ name: DeerFlow PR maintenance validation
 
 on:
   push:
-    branches: [validation/deerflow-maintenance-20261110]
+    branches: [validation/deerflow-maintenance-20261111]
 
 permissions:
   contents: read
@@ -16,12 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         revision:
-          - name: baseline
-            sha: 99e395aa9cdc369e8c80b164be4baa543619d8a8
           - name: pr-7891
-            sha: 928979c7c6cc71735cb5c9d65871f64ce81c999e
+            sha: 3eb365b37756e31a04003fac6e3f71cf40229de0
           - name: pr-7957
-            sha: a151f4af834a6175eecf264ad03b75fb64491715
+            sha: b5427c821b685cad19891921730abbe96f3218b5
         suite: [shard-1, shard-2, shard-3, shard-4, blocking-io]
     services:
       postgres:
@@ -59,7 +57,7 @@ jobs:
           python-version: '3.12'
       - uses: astral-sh/setup-uv@v7
         with:
-          version: '0.11.1'
+          version: '0.13.7'
       - name: Install backend dependencies
         working-directory: backend
         run: uv sync --frozen --group dev --extra postgres
