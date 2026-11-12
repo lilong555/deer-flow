@@ -3,7 +3,7 @@ name: DeerFlow PR maintenance validation
 on:
   workflow_dispatch:
   push:
-    branches: [validation/deerflow-maintenance-20261111]
+    branches: [validation/deerflow-maintenance-20261112]
 
 permissions:
   contents: read
@@ -18,9 +18,9 @@ jobs:
       matrix:
         revision:
           - name: pr-7891
-            sha: 3eb365b37756e31a04003fac6e3f71cf40229de0
+            sha: 442f25e4c79b87bbb04b95122116813aee42a79e
           - name: pr-7957
-            sha: b5427c821b685cad19891921730abbe96f3218b5
+            sha: fc2da1a2616d7b1147042b5fcb9e91a7a36f2a5c
         suite: [shard-1, shard-2, shard-3, shard-4, blocking-io]
     services:
       postgres:
